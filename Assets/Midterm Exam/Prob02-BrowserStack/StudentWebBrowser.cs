@@ -29,39 +29,63 @@ namespace MidtermExam.Prob02
         /// </remarks>
         public void Open(string url)
         {
-            // TODO: เขียนคำตอบแทนคำสั่ง throw exception ด้านล่าง
-            throw new NotImplementedException();
+            // 1. ตรวจสอบเงื่อนไข null, ข้อความว่าง ("") หรือช่องว่างล้วน ("   ")
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return;
+            }
+
+            // 2. ถ้ามีหน้าปัจจุบันเปิดไม่อยู่ (เคยเปิดเว็บมาแล้ว) ให้เก็บหน้าปัจจุบันลง backHistory
+            if (!string.IsNullOrEmpty(currentUrl))
+            {
+                backHistory.Push(currentUrl);
+            }
+
+            // 3. กำหนดหน้าปัจจุบันเป็น URL ใหม่
+            currentUrl = url;
+
+            // 4. ล้างประวัติการไปข้างหน้า (Redo stack) เสมอเมื่อเปิดหน้าใหม่
+            forwardHistory.Clear();
         }
 
         /// <summary>ย้อนกลับไปยังหน้าล่าสุดในประวัติย้อนกลับหนึ่งขั้น</summary>
-        /// <remarks>
-        /// ถ้า backHistory ว่าง ให้จบเมธอดโดยไม่เปลี่ยนสถานะ และต้องไม่เกิด exception
-        /// หน้าที่ออกจากการดูจะต้องเก็บไว้ เพื่อให้ Forward() กลับมาหน้านั้นได้
-        /// </remarks>
         public void Back()
         {
-            // TODO: เขียนคำตอบแทนคำสั่ง throw exception ด้านล่าง
-            throw new NotImplementedException();
+            // ถ้าไม่มีประวัติย้อนกลับ ให้ไม่ทำอะไรเลย
+            if (backHistory.Count == 0)
+            {
+                return;
+            }
+
+            // เก็บหน้าปัจจุบันลง forwardHistory เพื่อให้ Forward() กลับมาได้
+            forwardHistory.Push(currentUrl);
+
+            // ดึงหน้าล่าสุดจาก backHistory มาเป็นหน้าปัจจุบัน
+            currentUrl = backHistory.Pop();
         }
 
         /// <summary>ไปข้างหน้าไปยังหน้าล่าสุดในประวัติไปข้างหน้าหนึ่งขั้น</summary>
-        /// <remarks>
-        /// ถ้า forwardHistory ว่าง ให้จบเมธอดโดยไม่เปลี่ยนสถานะ และต้องไม่เกิด exception
-        /// หน้าที่ออกจากการดูจะต้องเก็บไว้ เพื่อให้ Back() กลับมาหน้านั้นได้
-        /// </remarks>
         public void Forward()
         {
-            // TODO: เขียนคำตอบแทนคำสั่ง throw exception ด้านล่าง
-            throw new NotImplementedException();
+            // ถ้าไม่มีประวัติไปข้างหน้า ให้ไม่ทำอะไรเลย
+            if (forwardHistory.Count == 0)
+            {
+                return;
+            }
+
+            // เก็บหน้าปัจจุบันลง backHistory เพื่อให้ Back() ย้อนกลับมาได้
+            backHistory.Push(currentUrl);
+
+            // ดึงหน้าล่าสุดจาก forwardHistory มาเป็นหน้าปัจจุบัน
+            currentUrl = forwardHistory.Pop();
         }
 
         /// <summary>อ่าน URL ของหน้าปัจจุบัน โดยไม่เปลี่ยนหน้าหรือประวัติใด ๆ</summary>
         /// <returns>URL ปัจจุบัน หรือ string.Empty ถ้ายังไม่เคยเปิดหน้าเว็บ</returns>
         public string Current()
         {
-            // TODO: คืนค่าหน้าที่ติดตามอยู่ใน currentUrl แทนคำสั่ง throw ด้านล่าง
-            // เมธอดนี้ใช้เพื่ออ่านสถานะเท่านั้น จึงไม่ต้อง Push(), Pop() หรือ Clear() ประวัติ
-            throw new NotImplementedException();
+            return currentUrl;
         }
     }
 }
+
